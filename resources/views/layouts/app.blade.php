@@ -97,7 +97,14 @@
             <div class="absolute bottom-4 left-4 right-4">
                 <div class="bg-slate-700 rounded-lg p-3 text-xs">
                     <p class="text-gray-400 mb-1"><i class="fas fa-info-circle mr-1"></i> Data Source:</p>
-                    <p class="text-blue-400">Open-Meteo API (Free)</p>
+                    <a
+                        href="https://open-meteo.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-blue-400 hover:text-blue-300 underline"
+                    >
+                        Open-Meteo API (Free)
+                    </a>
                 </div>
             </div>
             @endif

@@ -7,7 +7,18 @@
     <h1 class="text-3xl font-bold text-gray-800">
         <i class="fas fa-cloud-sun text-blue-500 mr-3"></i>Weather Dashboard
     </h1>
-    <p class="text-gray-600">Real-time weather data from Indonesian cities</p>
+    <p class="text-gray-600">Real-time weather data from cities in Java Island</p>
+    <p class="text-sm text-gray-500 mt-1">
+        Source:
+        <a
+            href="https://open-meteo.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-blue-600 hover:text-blue-700 underline"
+        >
+            Open-Meteo API
+        </a>
+    </p>
 </div>
 
 <!-- Stats Cards -->

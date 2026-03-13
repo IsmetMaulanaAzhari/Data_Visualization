@@ -9,18 +9,18 @@ class WeatherService
 {
     protected $baseUrl = 'https://api.open-meteo.com/v1/forecast';
     
-    // Indonesian cities with coordinates
+    // Java island cities with coordinates
     protected $cities = [
         'Jakarta' => ['lat' => -6.2088, 'lon' => 106.8456],
-        'Surabaya' => ['lat' => -7.2575, 'lon' => 112.7521],
         'Bandung' => ['lat' => -6.9175, 'lon' => 107.6191],
-        'Medan' => ['lat' => 3.5952, 'lon' => 98.6722],
         'Semarang' => ['lat' => -6.9666, 'lon' => 110.4196],
-        'Makassar' => ['lat' => -5.1477, 'lon' => 119.4327],
-        'Palembang' => ['lat' => -2.9761, 'lon' => 104.7754],
-        'Denpasar' => ['lat' => -8.6705, 'lon' => 115.2126],
         'Yogyakarta' => ['lat' => -7.7956, 'lon' => 110.3695],
+        'Surabaya' => ['lat' => -7.2575, 'lon' => 112.7521],
         'Malang' => ['lat' => -7.9666, 'lon' => 112.6326],
+        'Cirebon' => ['lat' => -6.7063, 'lon' => 108.5570],
+        'Serang' => ['lat' => -6.1201, 'lon' => 106.1503],
+        'Bogor' => ['lat' => -6.5944, 'lon' => 106.7892],
+        'Sukabumi' => ['lat' => -6.9175, 'lon' => 106.9270],
     ];
 
     public function getCities()
