@@ -47,13 +47,13 @@
 <!-- Summary Cards -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
     <div class="bg-white rounded-lg shadow p-6">
-        <div class="flex items-center">
-            <div class="p-3 bg-blue-100 rounded-full">
+        <div class="flex items-start">
+            <div class="p-3 bg-blue-100 rounded-full shrink-0">
                 <i class="fas fa-dollar-sign text-blue-600 text-xl"></i>
             </div>
-            <div class="ml-4">
+            <div class="ml-4 min-w-0">
                 <p class="text-gray-500 text-sm">Total Revenue</p>
-                <p class="text-xl lg:text-2xl font-bold text-gray-800 leading-tight break-words max-w-[170px]">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</p>
+                <p class="text-base font-bold text-gray-800 leading-snug break-all">Rp&nbsp;{{ number_format($totalRevenue, 0, ',', '.') }}</p>
             </div>
         </div>
     </div>
