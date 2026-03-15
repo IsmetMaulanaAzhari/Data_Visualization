@@ -1,66 +1,172 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Data Visualization Dashboard
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web visualisasi data berbasis **Laravel** yang memiliki dua mode tampilan: **Database Dashboard** (data penjualan dummy) dan **Weather API Dashboard** (data cuaca real-time kota-kota di Pulau Jawa menggunakan Open-Meteo API).
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Database Dashboard (Data Penjualan)
+- Ringkasan statistik: Total Revenue, Total Orders, Total Customers, Total Products
+- Filter data berdasarkan **periode** (30 / 90 / 180 / 365 hari / semua) dan **status order**
+- Grafik Penjualan Bulanan (Line Chart)
+- Grafik Penjualan per Kategori (Doughnut Chart)
+- Top 10 Produk Terlaris (Bar Chart horizontal)
+- Distribusi Status Order (Pie Chart)
+- Grafik Penjualan Harian (Bar Chart)
+- Tabel Top 5 Customers berdasarkan total spending
+- Tabel Recent Orders (10 terbaru)
+- CRUD lengkap untuk: **Kategori**, **Produk**, **Customers**, dan **Orders**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Weather API Dashboard (Data Cuaca – Pulau Jawa)
+- Data cuaca real-time dari **15 kota di Pulau Jawa**:
+  Jakarta, Bandung, Semarang, Yogyakarta, Surabaya, Malang, Cirebon, Serang, Cilegon, Bogor, Sukabumi, Bekasi, Depok, Tangerang, Tasikmalaya
+- Grafik suhu dan kelembapan per kota
+- Halaman **Cities**: detail cuaca + mini forecast 3 hari tiap kota
+- Halaman **7-Day Forecast**: prediksi cuaca 7 hari pilihan kota + line chart tren suhu
+- Halaman **Compare Cities**: perbandingan cuaca 2–5 kota secara side-by-side
+- Sumber data: [Open-Meteo API](https://open-meteo.com/) (gratis, tanpa API key)
 
-## Learning Laravel
+### UI / UX
+- Sidebar collapsible (buka/tutup, state tersimpan di localStorage)
+- Toggle mode **Database ↔ Weather API** di sidebar
+- Responsif (Tailwind CSS)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Tech Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Komponen | Detail |
+|---|---|
+| Backend Framework | Laravel 11 (PHP 8.2+) |
+| Frontend | Blade Templates, Tailwind CSS (CDN), Chart.js |
+| Icons | Font Awesome 6 |
+| Database | MySQL |
+| External API | [Open-Meteo](https://open-meteo.com/) (Weather) |
+| Caching | Laravel Cache (10 menit untuk data cuaca) |
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Instalasi
 
-### Premium Partners
+### 1. Clone repository
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```bash
+git clone https://github.com/IsmetMaulanaAzhari/Data_Visualization.git
+cd Data_Visualization
+```
 
-## Contributing
+### 2. Install dependencies
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+composer install
+```
 
-## Code of Conduct
+### 3. Konfigurasi environment
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Security Vulnerabilities
+Edit `.env` sesuaikan koneksi database:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=data_visualization
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## License
+### 4. Migrasi dan Seeder
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan migrate
+php artisan db:seed --class=SalesDataSeeder
+```
+
+Seeder akan membuat:
+- 6 kategori produk
+- ±41 produk
+- 50 customers
+- 500 orders dengan item detail
+
+### 5. Jalankan server
+
+```bash
+php artisan serve
+```
+
+Akses di: `http://localhost:8000`
+
+---
+
+## Halaman & Routes
+
+### Database Mode
+
+| URL | Halaman |
+|---|---|
+| `/` | Dashboard utama (charts + statistik) |
+| `/categories` | CRUD Kategori |
+| `/products` | CRUD Produk |
+| `/customers` | CRUD Customers |
+| `/orders` | CRUD Orders |
+
+### Weather API Mode
+
+| URL | Halaman |
+|---|---|
+| `/weather` | Dashboard cuaca (suhu & kelembapan semua kota) |
+| `/weather/cities` | Detail cuaca per kota |
+| `/weather/forecast?city=Jakarta` | Forecast 7 hari kota tertentu |
+| `/weather/comparison?cities[]=Jakarta&cities[]=Bandung` | Perbandingan cuaca antar kota |
+| `/weather/refresh` | Reset cache data cuaca |
+
+---
+
+## Struktur Proyek
+
+```
+app/
+├── Http/Controllers/
+│   ├── DashboardController.php       # Dashboard penjualan + filter
+│   ├── CategoryController.php        # CRUD Kategori
+│   ├── ProductController.php         # CRUD Produk
+│   ├── CustomerController.php        # CRUD Customers
+│   ├── OrderController.php           # CRUD Orders
+│   └── WeatherController.php         # Dashboard cuaca (API)
+├── Models/
+│   ├── Category.php
+│   ├── Product.php
+│   ├── Customer.php
+│   ├── Order.php
+│   └── OrderItem.php
+└── Services/
+    └── WeatherService.php            # Fetch + cache data Open-Meteo
+
+resources/views/
+├── layouts/app.blade.php             # Layout utama + sidebar
+├── dashboard/index.blade.php         # Dashboard penjualan
+├── weather/
+│   ├── dashboard.blade.php           # Weather overview
+│   ├── cities.blade.php              # Detail tiap kota
+│   ├── forecast.blade.php            # Forecast 7 hari
+│   └── comparison.blade.php          # Perbandingan kota
+└── [categories|products|customers|orders]/  # CRUD views
+```
+
+---
+
+## Sumber Data
+
+- **Data Penjualan**: Data dummy yang di-generate menggunakan Laravel Seeder (`SalesDataSeeder`)
+- **Data Cuaca**: Diambil secara real-time dari [Open-Meteo API](https://open-meteo.com/) — gratis, tidak memerlukan API key, dikache selama 10 menit
+
+---
+
+## Lisensi
+
+MIT License
