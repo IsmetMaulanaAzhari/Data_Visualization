@@ -38,12 +38,15 @@
             <!-- Data Source Toggle -->
             <div class="px-4 mb-4">
                 <p class="text-gray-400 text-xs uppercase mb-2">Data Source</p>
-                <div class="flex bg-slate-700 rounded-lg p-1">
-                    <a href="{{ route('dashboard') }}" class="flex-1 text-center py-1 px-2 text-xs rounded {{ request()->routeIs('dashboard') || request()->routeIs('categories.*') || request()->routeIs('products.*') || request()->routeIs('customers.*') || request()->routeIs('orders.*') ? 'bg-blue-500 text-white' : 'text-gray-300 hover:text-white' }}">
+                <div class="grid grid-cols-3 gap-1 bg-slate-700 rounded-lg p-1">
+                    <a href="{{ route('dashboard') }}" class="text-center py-1 px-2 text-[11px] rounded {{ request()->routeIs('dashboard') || request()->routeIs('categories.*') || request()->routeIs('products.*') || request()->routeIs('customers.*') || request()->routeIs('orders.*') ? 'bg-blue-500 text-white' : 'text-gray-300 hover:text-white' }}">
                         Database
                     </a>
-                    <a href="{{ route('weather.dashboard') }}" class="flex-1 text-center py-1 px-2 text-xs rounded {{ request()->routeIs('weather.*') ? 'bg-blue-500 text-white' : 'text-gray-300 hover:text-white' }}">
+                    <a href="{{ route('weather.dashboard') }}" class="text-center py-1 px-2 text-[11px] rounded {{ request()->routeIs('weather.*') ? 'bg-blue-500 text-white' : 'text-gray-300 hover:text-white' }}">
                         Weather API
+                    </a>
+                    <a href="{{ route('student-productivity.dashboard') }}" class="text-center py-1 px-2 text-[11px] rounded {{ request()->routeIs('student-productivity.*') ? 'bg-blue-500 text-white' : 'text-gray-300 hover:text-white' }}">
+                        Student CSV
                     </a>
                 </div>
             </div>
@@ -66,6 +69,11 @@
                     <a href="{{ route('weather.comparison') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-slate-700 hover:text-white {{ request()->routeIs('weather.comparison') ? 'bg-slate-700 text-white border-l-4 border-blue-500' : '' }}">
                         <i class="fas fa-balance-scale w-6"></i>
                         <span>Compare Cities</span>
+                    </a>
+                @elseif(request()->routeIs('student-productivity.*'))
+                    <a href="{{ route('student-productivity.dashboard') }}" class="flex items-center px-4 py-3 text-gray-300 hover:bg-slate-700 hover:text-white {{ request()->routeIs('student-productivity.dashboard') ? 'bg-slate-700 text-white border-l-4 border-blue-500' : '' }}">
+                        <i class="fas fa-user-graduate w-6"></i>
+                        <span>Dashboard</span>
                     </a>
                 @else
                     <!-- Database Navigation -->
@@ -107,6 +115,13 @@
                     </a>
                 </div>
             </div>
+            @elseif(request()->routeIs('student-productivity.*'))
+            <div class="absolute bottom-4 left-4 right-4">
+                <div class="bg-slate-700 rounded-lg p-3 text-xs">
+                    <p class="text-gray-400 mb-1"><i class="fas fa-file-csv mr-1"></i> Data Source:</p>
+                    <p class="text-blue-400 break-all">storage/app/datasets/ultimate_student_productivity_dataset_5000.csv</p>
+                </div>
+            </div>
             @endif
         </aside>
 
@@ -125,6 +140,10 @@
                     @if(request()->routeIs('weather.*'))
                         <span class="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
                             <i class="fas fa-cloud mr-1"></i> Weather API Mode
+                        </span>
+                    @elseif(request()->routeIs('student-productivity.*'))
+                        <span class="text-sm bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">
+                            <i class="fas fa-file-csv mr-1"></i> Student Dataset Mode
                         </span>
                     @else
                         <span class="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full">

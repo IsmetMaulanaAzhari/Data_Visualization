@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StudentProductivityController;
 use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,4 +47,9 @@ Route::prefix('weather')->name('weather.')->group(function () {
     Route::get('/forecast', [WeatherController::class, 'forecast'])->name('forecast');
     Route::get('/comparison', [WeatherController::class, 'comparison'])->name('comparison');
     Route::get('/refresh', [WeatherController::class, 'refresh'])->name('refresh');
+});
+
+// Student Dataset Routes (CSV)
+Route::prefix('student-productivity')->name('student-productivity.')->group(function () {
+    Route::get('/', [StudentProductivityController::class, 'dashboard'])->name('dashboard');
 });
