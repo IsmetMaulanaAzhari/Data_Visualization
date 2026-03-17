@@ -2,13 +2,59 @@
 
 namespace App\Services;
 
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class StudentProductivityService
 {
+    protected string $cacheKey = 'student_productivity_dataset_rows';
     protected string $datasetPath = 'datasets/ultimate_student_productivity_dataset_5000.csv';
+
+    public function getDatasetPath(): string
+    {
+        return $this->datasetPath;
+    }
+
+    public function datasetExists(): bool
+    {
+        return Storage::disk('local')->exists($this->datasetPath);
+    }
+
+    public function getDatasetMeta(): array
+    {
+        if (!$this->datasetExists()) {
+            return [
+                'exists' => false,
+                'size_kb' => 0,
+                'updated_at' => null,
+            ];
+        }
+
+        return [
+            'exists' => true,
+            'size_kb' => round(Storage::disk('local')->size($this->datasetPath) / 1024, 2),
+            'updated_at' => Storage::disk('local')->lastModified($this->datasetPath),
+        ];
+    }
+
+    public function replaceDataset(UploadedFile $file): void
+    {
+        Storage::disk('local')->makeDirectory('datasets');
+        Storage::disk('local')->putFileAs('datasets', $file, basename($this->datasetPath));
+        $this->refreshCache();
+    }
+
+    public function refreshCache(): void
+    {
+        Cache::forget($this->cacheKey);
+    }
+
+    public function getPreviewRows(int $limit = 10): array
+    {
+        return $this->loadRows()->take($limit)->values()->all();
+    }
 
     public function getAvailableFilters(): array
     {
@@ -121,6 +167,25 @@ class StudentProductivityService
         ];
     }
 
+    public function getApiPayload(array $filters = []): array
+    {
+        $dashboardData = $this->getDashboardData($filters);
+
+        return [
+            'filters' => $filters,
+            'meta' => array_merge($this->getDatasetMeta(), [
+                'dataset_path' => $this->datasetPath,
+                'generated_at' => now()->toIso8601String(),
+            ]),
+            'summary' => $dashboardData['stats'],
+            'distribution' => [
+                'gender' => $dashboardData['gender_distribution'],
+                'internet_quality' => $dashboardData['internet_quality_distribution'],
+                'academic_level' => $dashboardData['academic_summary'],
+            ],
+        ];
+    }
+
     protected function getFilteredRows(array $filters = []): Collection
     {
         $rows = $this->loadRows();
@@ -144,7 +209,11 @@ class StudentProductivityService
 
     protected function loadRows(): Collection
     {
-        return Cache::remember('student_productivity_dataset_rows', 600, function () {
+        return Cache::remember($this->cacheKey, 600, function () {
+            if (!$this->datasetExists()) {
+                return collect();
+            }
+
             $path = Storage::disk('local')->path($this->datasetPath);
             $handle = fopen($path, 'r');
 

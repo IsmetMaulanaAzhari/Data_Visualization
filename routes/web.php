@@ -52,4 +52,7 @@ Route::prefix('weather')->name('weather.')->group(function () {
 // Student Dataset Routes (CSV)
 Route::prefix('student-productivity')->name('student-productivity.')->group(function () {
     Route::get('/', [StudentProductivityController::class, 'dashboard'])->name('dashboard');
+    Route::post('/upload', [StudentProductivityController::class, 'upload'])->name('upload');
+    Route::post('/refresh', [StudentProductivityController::class, 'refresh'])->name('refresh');
+    Route::get('/api', [StudentProductivityController::class, 'apiData'])->name('api');
 });
