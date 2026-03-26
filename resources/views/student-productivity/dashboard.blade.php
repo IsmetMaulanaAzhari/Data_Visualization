@@ -18,7 +18,7 @@
     <h1 class="text-5xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
         Analisis Produktivitas Mahasiswa
     </h1>
-    <p class="text-gray-600 text-lg">Eksplorasi mendalam tentang pola belajar dan performa akademik berdasarkan dataset CSV yang Anda upload.</p>
+    <p class="text-gray-600 text-lg">Eksplorasi mendalam tentang pola belajar, kualitas fokus, dan performa akademik mahasiswa.</p>
     <div class="mt-3 inline-block bg-gradient-to-r from-violet-100 to-purple-100 text-violet-700 px-4 py-2 rounded-lg text-sm font-medium">
         {{ number_format($dashboardData['total_rows_before_filter']) }} data mahasiswa dalam dataset
     </div>
@@ -27,17 +27,20 @@
 <div class="bg-white/70 backdrop-blur-md rounded-xl shadow-md border border-white p-6 mb-6 card-hover">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2">
-            <div class="mb-4">
-                <h2 class="text-lg font-semibold text-gray-800 mb-3">Upload Dataset CSV Baru</h2>
-                <p class="text-sm text-gray-600 mb-4">Ganti dataset dengan file CSV baru (maksimal 50MB). Cache akan otomatis diperbarui setelah upload.</p>
-            </div>
-            <form method="POST" action="{{ route('student-productivity.upload') }}" enctype="multipart/form-data" class="flex flex-col md:flex-row gap-3">
-                @csrf
-                <input type="file" name="dataset_file" accept=".csv" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
-                <button type="submit" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 font-medium whitespace-nowrap">
-                    Unggah Dataset
-                </button>
-            </form>
+            <h2 class="text-lg font-semibold text-gray-800 mb-3">
+                <i class="fas fa-lightbulb mr-2 text-violet-600"></i>Ringkasan Visualisasi
+            </h2>
+            <p class="text-sm text-gray-600 mb-3">
+                Dashboard ini menyoroti hubungan antara jam belajar, produktivitas, burnout, dan hasil ujian untuk membantu melihat pola belajar yang paling efektif.
+            </p>
+            <p class="text-sm text-gray-600 mb-3">
+                Gunakan filter tingkat akademik, gender, dan kualitas internet untuk membaca tren spesifik pada kelompok mahasiswa tertentu.
+            </p>
+            <p class="text-sm text-gray-600">
+                Insight cepat: rata-rata produktivitas saat ini <span class="font-semibold text-purple-600">{{ $stats['avg_productivity'] }}</span>,
+                rata-rata nilai ujian <span class="font-semibold text-emerald-600">{{ $stats['avg_exam_score'] }}</span>,
+                dan rata-rata burnout <span class="font-semibold text-rose-600">{{ $stats['avg_burnout'] }}</span>.
+            </p>
         </div>
         <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-5 border border-purple-100">
             <h3 class="font-semibold text-gray-800 mb-4">Dataset Info</h3>
