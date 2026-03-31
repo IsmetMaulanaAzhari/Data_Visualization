@@ -58,6 +58,51 @@
     </div>
 </div>
 
+<!-- Filter Section -->
+<div class="bg-white/70 backdrop-blur-md rounded-xl shadow-md border border-white p-6 mb-8">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">
+        <i class="fas fa-filter mr-2 text-blue-600"></i>Filter Data Cuaca
+    </h2>
+    <form method="GET" action="{{ route('weather.dashboard') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div>
+            <label for="city_search" class="block text-sm font-medium text-gray-700 mb-2">Cari Nama Kota</label>
+            <input type="text" id="city_search" name="city_search" value="{{ $filters['city_search'] }}" placeholder="Misal: Bandung" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+        <div>
+            <label for="city_letter" class="block text-sm font-medium text-gray-700 mb-2">Filter Abjad</label>
+            <select id="city_letter" name="city_letter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="">Semua Kota</option>
+                @php
+                    $letters = [];
+                    foreach(array_keys($allWeather) as $city) {
+                        $letters[] = strtoupper($city[0]);
+                    }
+                    $letters = array_unique($letters);
+                    sort($letters);
+                @endphp
+                @foreach($letters as $letter)
+                    <option value="{{ $letter }}" {{ $filters['city_letter'] === $letter ? 'selected' : '' }}>{{ $letter }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label for="humidity_level" class="block text-sm font-medium text-gray-700 mb-2">Tingkat Kelembaban</label>
+            <select id="humidity_level" name="humidity_level" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="">Semua Level</option>
+                <option value="low" {{ $filters['humidity_level'] === 'low' ? 'selected' : '' }}>Rendah (&lt; 60%)</option>
+                <option value="medium" {{ $filters['humidity_level'] === 'medium' ? 'selected' : '' }}>Sedang (60% - 80%)</option>
+                <option value="high" {{ $filters['humidity_level'] === 'high' ? 'selected' : '' }}>Tinggi (&gt; 80%)</option>
+            </select>
+        </div>
+        <div class="flex gap-2">
+            <button type="submit" class="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 font-medium">
+                <i class="fas fa-search mr-1"></i>Filter
+            </button>
+            <a href="{{ route('weather.dashboard') }}" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors font-medium">Reset</a>
+        </div>
+    </form>
+</div>
+
 <!-- Charts Row -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Temperature Chart -->
@@ -70,7 +115,7 @@
         </div>
     </div>
 
-    <!-- Humidity Chart -->
+    <!-- Humidity Chart (Changed to Line Chart) -->
     <div class="bg-white/70 backdrop-blur-md rounded-xl shadow-md border border-white p-6 card-hover">
         <h3 class="text-lg font-semibold text-gray-800 mb-4">
             Kelembaban Udara (%)
@@ -89,7 +134,7 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-    @foreach($allWeather as $city => $data)
+    @foreach($filteredWeather as $city => $data)
     <div class="bg-white/70 backdrop-blur-md rounded-xl shadow-md border border-white p-6 hover:shadow-lg transition-all duration-300 card-hover">
         <div class="text-center">
             <h4 class="font-semibold text-gray-800 text-lg mb-4">{{ $city }}</h4>
@@ -176,37 +221,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Humidity Chart
+    // Humidity Chart (Line Chart)
     const humidityCtx = document.getElementById('humidityChart').getContext('2d');
     new Chart(humidityCtx, {
-        type: 'doughnut',
+        type: 'line',
         data: {
             labels: cityLabels,
             datasets: [{
+                label: 'Humidity (%)',
                 data: humidities,
-                backgroundColor: [
-                    'rgba(59, 130, 246, 0.8)',
-                    'rgba(16, 185, 129, 0.8)',
-                    'rgba(245, 158, 11, 0.8)',
-                    'rgba(239, 68, 68, 0.8)',
-                    'rgba(139, 92, 246, 0.8)',
-                    'rgba(236, 72, 153, 0.8)',
-                    'rgba(20, 184, 166, 0.8)',
-                    'rgba(99, 102, 241, 0.8)',
-                    'rgba(168, 162, 158, 0.8)',
-                    'rgba(34, 197, 94, 0.8)'
-                ],
-                borderWidth: 1
+                borderColor: 'rgba(59, 130, 246, 0.8)',
+                backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: 'rgba(59, 130, 246, 0.8)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: '58%',
             plugins: {
-                legend: {
-                    position: 'right',
-                    labels: { boxWidth: 12 }
+                legend: { display: true }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
                 }
             }
         }

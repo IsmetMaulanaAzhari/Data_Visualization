@@ -193,20 +193,36 @@ class WeatherService
         return $this->getCurrentWeather();
     }
 
-    public function getDashboardStats()
+    public function getDashboardStats($filters = [])
     {
         $allWeather = $this->getCurrentWeather();
+        $filteredWeather = $this->filterWeatherData($allWeather, $filters);
         
         $temperatures = [];
         $humidities = [];
         $precipitations = [];
         
-        foreach ($allWeather as $city => $data) {
+        foreach ($filteredWeather as $city => $data) {
             if ($data['success'] && $data['current']) {
                 $temperatures[$city] = $data['current']['temperature'];
                 $humidities[$city] = $data['current']['humidity'];
                 $precipitations[$city] = $data['current']['precipitation'];
             }
+        }
+
+        if (empty($temperatures)) {
+            return [
+                'total_cities' => count($this->cities),
+                'hottest_city' => 'N/A',
+                'hottest_temp' => 0,
+                'coolest_city' => 'N/A',
+                'coolest_temp' => 0,
+                'avg_temperature' => 0,
+                'avg_humidity' => 0,
+                'temperatures' => [],
+                'humidities' => [],
+                'precipitations' => [],
+            ];
         }
         
         return [
@@ -221,5 +237,51 @@ class WeatherService
             'humidities' => $humidities,
             'precipitations' => $precipitations,
         ];
+    }
+
+    protected function filterWeatherData($allWeather, $filters = [])
+    {
+        $filtered = [];
+
+        foreach ($allWeather as $city => $data) {
+            $include = true;
+
+            // Filter by city name (abjad/alphabet search)
+            if (!empty($filters['city_search'])) {
+                $search = strtolower($filters['city_search']);
+                if (strpos(strtolower($city), $search) === false) {
+                    $include = false;
+                }
+            }
+
+            // Filter by city starts with letter
+            if (!empty($filters['city_letter'])) {
+                if (strtolower($city[0]) !== strtolower($filters['city_letter'])) {
+                    $include = false;
+                }
+            }
+
+            // Filter by humidity level
+            if (!empty($filters['humidity_level']) && $data['success'] && $data['current']) {
+                $humidity = $data['current']['humidity'];
+                switch ($filters['humidity_level']) {
+                    case 'low':
+                        if ($humidity > 60) $include = false;
+                        break;
+                    case 'medium':
+                        if ($humidity <= 60 || $humidity > 80) $include = false;
+                        break;
+                    case 'high':
+                        if ($humidity <= 80) $include = false;
+                        break;
+                }
+            }
+
+            if ($include) {
+                $filtered[$city] = $data;
+            }
+        }
+
+        return $filtered;
     }
 }
