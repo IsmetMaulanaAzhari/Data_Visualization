@@ -38,17 +38,19 @@
         <div class="text-right">
             @php
                 $code = $weatherData['current']['weather_code'] ?? 0;
-                $emoji = match(true) {
-                    $code == 0 => '☀️',
-                    $code <= 3 => '⛅',
-                    $code <= 48 => '🌫️',
-                    $code <= 65 => '🌧️',
-                    $code <= 77 => '❄️',
-                    $code <= 82 => '⛈️',
-                    default => '⚡',
+                $icon = match(true) {
+                    $code == 0 => 'fa-sun text-amber-300',
+                    $code <= 3 => 'fa-cloud-sun text-orange-200',
+                    $code <= 48 => 'fa-smog text-slate-200',
+                    $code <= 65 => 'fa-cloud-rain text-blue-200',
+                    $code <= 77 => 'fa-snowflake text-cyan-200',
+                    $code <= 82 => 'fa-cloud-showers-heavy text-indigo-200',
+                    default => 'fa-bolt text-yellow-200',
                 };
             @endphp
-            <span class="text-8xl opacity-90">{{ $emoji }}</span>
+            <span class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/10 border border-white/30">
+                <i class="fas {{ $icon }} text-5xl"></i>
+            </span>
         </div>
     </div>
 </div>
@@ -72,17 +74,17 @@
             <div class="flex items-center md:justify-center flex-1 gap-3">
                 @php
                     $dayCode = $day['weather_code'];
-                    $dayEmoji = match(true) {
-                        $dayCode == 0 => '☀️',
-                        $dayCode <= 3 => '⛅',
-                        $dayCode <= 48 => '🌫️',
-                        $dayCode <= 65 => '🌧️',
-                        $dayCode <= 77 => '❄️',
-                        $dayCode <= 82 => '⛈️',
-                        default => '⚡',
+                    $dayIcon = match(true) {
+                        $dayCode == 0 => 'fa-sun text-amber-500',
+                        $dayCode <= 3 => 'fa-cloud-sun text-orange-400',
+                        $dayCode <= 48 => 'fa-smog text-slate-400',
+                        $dayCode <= 65 => 'fa-cloud-rain text-blue-500',
+                        $dayCode <= 77 => 'fa-snowflake text-cyan-400',
+                        $dayCode <= 82 => 'fa-cloud-showers-heavy text-indigo-500',
+                        default => 'fa-bolt text-yellow-500',
                     };
                 @endphp
-                <span class="text-3xl">{{ $dayEmoji }}</span>
+                <span class="text-3xl"><i class="fas {{ $dayIcon }}"></i></span>
                 <span class="text-gray-700 capitalize">{{ $day['weather_description'] }}</span>
             </div>
             

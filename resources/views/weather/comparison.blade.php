@@ -44,17 +44,19 @@
         <div class="p-6 text-center">
             @php
                 $code = $data['current']['weather_code'];
-                $emoji = match(true) {
-                    $code == 0 => '☀️',
-                    $code <= 3 => '⛅',
-                    $code <= 48 => '🌫️',
-                    $code <= 65 => '🌧️',
-                    $code <= 77 => '❄️',
-                    $code <= 82 => '⛈️',
-                    default => '⚡',
+                $icon = match(true) {
+                    $code == 0 => 'fa-sun text-amber-500',
+                    $code <= 3 => 'fa-cloud-sun text-orange-400',
+                    $code <= 48 => 'fa-smog text-slate-400',
+                    $code <= 65 => 'fa-cloud-rain text-blue-500',
+                    $code <= 77 => 'fa-snowflake text-cyan-400',
+                    $code <= 82 => 'fa-cloud-showers-heavy text-indigo-500',
+                    default => 'fa-bolt text-yellow-500',
                 };
             @endphp
-            <span class="text-6xl mb-4 block">{{ $emoji }}</span>
+            <span class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-sm border border-slate-100 mb-4">
+                <i class="fas {{ $icon }} text-4xl"></i>
+            </span>
             <p class="text-5xl font-bold text-gray-800">{{ round($data['current']['temperature']) }}°C</p>
             <p class="text-gray-600 mb-6 capitalize">{{ $data['current']['weather_description'] }}</p>
             

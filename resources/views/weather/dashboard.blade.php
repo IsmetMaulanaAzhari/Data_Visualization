@@ -30,7 +30,7 @@
             <div>
                 <p class="text-gray-600 text-sm font-medium">Kota Terpanas</p>
                 <h3 class="text-2xl font-bold text-red-600 mt-2">{{ $stats['hottest_city'] }}</h3>
-                <p class="text-sm text-gray-500 mt-1">{{ $stats['hottest_temp'] }}°C</p>
+                <p class="text-sm text-gray-500 mt-1">{{ $stats['hottest_temp'] > 0 ? $stats['hottest_temp'] . '°C' : 'Belum tersedia' }}</p>
             </div>
             <div class="text-4xl text-red-400"><i class="fas fa-temperature-high"></i></div>
         </div>
@@ -41,7 +41,7 @@
             <div>
                 <p class="text-gray-600 text-sm font-medium">Kota Terdingin</p>
                 <h3 class="text-2xl font-bold text-blue-600 mt-2">{{ $stats['coolest_city'] }}</h3>
-                <p class="text-sm text-gray-500 mt-1">{{ $stats['coolest_temp'] }}°C</p>
+                <p class="text-sm text-gray-500 mt-1">{{ $stats['coolest_temp'] > 0 ? $stats['coolest_temp'] . '°C' : 'Belum tersedia' }}</p>
             </div>
             <div class="text-4xl text-cyan-400"><i class="fas fa-snowflake"></i></div>
         </div>
@@ -134,25 +134,34 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+    @if(count($filteredWeather) === 0)
+    <div class="col-span-full bg-white/70 backdrop-blur-md rounded-xl shadow-md border border-white p-10 text-center">
+        <div class="text-5xl text-slate-300 mb-3"><i class="fas fa-cloud-slash"></i></div>
+        <p class="text-lg font-semibold text-slate-700">Tidak ada data yang cocok dengan filter</p>
+        <p class="text-sm text-slate-500 mt-1">Ubah kata kunci atau reset filter untuk melihat semua kota.</p>
+    </div>
+    @endif
     @foreach($filteredWeather as $city => $data)
     <div class="bg-white/70 backdrop-blur-md rounded-xl shadow-md border border-white p-6 hover:shadow-lg transition-all duration-300 card-hover">
         <div class="text-center">
             <h4 class="font-semibold text-gray-800 text-lg mb-4">{{ $city }}</h4>
             @if($data['success'] && $data['current'])
-                <div class="my-4 text-6xl">
+                <div class="my-4">
                     @php
                         $code = $data['current']['weather_code'];
-                        $emoji = match(true) {
-                            $code == 0 => '☀️',
-                            $code <= 3 => '⛅',
-                            $code <= 48 => '🌫️',
-                            $code <= 65 => '🌧️',
-                            $code <= 77 => '❄️',
-                            $code <= 82 => '⛈️',
-                            default => '⚡',
+                        $icon = match(true) {
+                            $code == 0 => 'fa-sun text-amber-500',
+                            $code <= 3 => 'fa-cloud-sun text-orange-400',
+                            $code <= 48 => 'fa-smog text-slate-400',
+                            $code <= 65 => 'fa-cloud-rain text-blue-500',
+                            $code <= 77 => 'fa-snowflake text-cyan-400',
+                            $code <= 82 => 'fa-cloud-showers-heavy text-indigo-500',
+                            default => 'fa-bolt text-yellow-500',
                         };
                     @endphp
-                    {{ $emoji }}
+                    <span class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-sm border border-slate-100">
+                        <i class="fas {{ $icon }} text-4xl"></i>
+                    </span>
                 </div>
                 <p class="text-4xl font-bold text-gray-800">{{ round($data['current']['temperature']) }}°C</p>
                 <p class="text-sm text-gray-600 mt-2 capitalize">{{ $data['current']['weather_description'] }}</p>

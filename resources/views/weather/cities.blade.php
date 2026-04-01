@@ -28,17 +28,19 @@
                 <div>
                     @php
                         $code = $data['current']['weather_code'];
-                        $emoji = match(true) {
-                            $code == 0 => '☀️',
-                            $code <= 3 => '⛅',
-                            $code <= 48 => '🌫️',
-                            $code <= 65 => '🌧️',
-                            $code <= 77 => '❄️',
-                            $code <= 82 => '⛈️',
-                            default => '⚡',
+                        $icon = match(true) {
+                            $code == 0 => 'fa-sun text-amber-500',
+                            $code <= 3 => 'fa-cloud-sun text-orange-400',
+                            $code <= 48 => 'fa-smog text-slate-400',
+                            $code <= 65 => 'fa-cloud-rain text-blue-500',
+                            $code <= 77 => 'fa-snowflake text-cyan-400',
+                            $code <= 82 => 'fa-cloud-showers-heavy text-indigo-500',
+                            default => 'fa-bolt text-yellow-500',
                         };
                     @endphp
-                    <span class="text-6xl">{{ $emoji }}</span>
+                    <span class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white shadow-sm border border-slate-100">
+                        <i class="fas {{ $icon }} text-4xl"></i>
+                    </span>
                 </div>
                 <div class="text-right">
                     <p class="text-5xl font-bold text-gray-800">{{ round($data['current']['temperature']) }}°C</p>
@@ -75,17 +77,17 @@
                         <p class="text-xs text-gray-600 font-medium">{{ substr($data['daily'][$i]['day_name'], 0, 3) }}</p>
                         @php
                             $dayCode = $data['daily'][$i]['weather_code'];
-                            $dayEmoji = match(true) {
-                                $dayCode == 0 => '☀️',
-                                $dayCode <= 3 => '⛅',
-                                $dayCode <= 48 => '🌫️',
-                                $dayCode <= 65 => '🌧️',
-                                $dayCode <= 77 => '❄️',
-                                $dayCode <= 82 => '⛈️',
-                                default => '⚡',
+                            $dayIcon = match(true) {
+                                $dayCode == 0 => 'fa-sun text-amber-500',
+                                $dayCode <= 3 => 'fa-cloud-sun text-orange-400',
+                                $dayCode <= 48 => 'fa-smog text-slate-400',
+                                $dayCode <= 65 => 'fa-cloud-rain text-blue-500',
+                                $dayCode <= 77 => 'fa-snowflake text-cyan-400',
+                                $dayCode <= 82 => 'fa-cloud-showers-heavy text-indigo-500',
+                                default => 'fa-bolt text-yellow-500',
                             };
                         @endphp
-                        <p class="text-2xl my-2">{{ $dayEmoji }}</p>
+                        <p class="text-2xl my-2"><i class="fas {{ $dayIcon }}"></i></p>
                         <p class="text-xs font-semibold text-gray-700">{{ round($data['daily'][$i]['temp_max']) }}°</p>
                     </div>
                     @endfor
